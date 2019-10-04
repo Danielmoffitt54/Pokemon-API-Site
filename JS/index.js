@@ -5,9 +5,29 @@ $(function () {
 
     // Set up the event handler for when the search button is clicked 
     $("#search").click(function() {
-        $("#pokemonInfoList").html("");
+        var pokeInput = $("#pokemonInput").val();
         let pokemonNameOrId = $("#pokemonInput").val().toLowerCase();
-        getPokemonInfo(pokemonNameOrId);
+        if (pokeInput.length > 0) {
+            getPokemonInfo(pokemonNameOrId);
+            $("#pokemonInput").val("");
+            $("#pokemonInfoList").html("");
+        }
+    });
+
+    $("#pokemonInput").keydown(function(event) {
+        if (event.keyCode === 13) {
+
+            event.preventDefault();
+
+            var pokeInput = $("#pokemonInput").val();
+            let pokemonNameOrId = $("#pokemonInput").val().toLowerCase();
+
+            if (pokeInput.length > 0) {
+                getPokemonInfo(pokemonNameOrId);
+                $("#pokemonInput").val("");
+                $("#pokemonInfoList").html("");
+            }
+        }
     });
 
     function determineBackgroundColor(type) {
@@ -75,6 +95,7 @@ $(function () {
                 let types = result.types;
                 
                 $("#pokemonName").html(name.toUpperCase());
+                $("#pokemonImage").show();
                 $("#pokemonImage").attr("src", spriteLink);
                 $("#pokemonInfoList").append('<li class="list-group-item" >ID: ' + id + '</li>');
                 $("#pokemonInfoList").append('<li class="list-group-item" >Weight: ' + weight + ' lbs.</li>');
@@ -95,6 +116,10 @@ $(function () {
             // The function we pass in here will be called if our request fails.
             error: function(error) {
                 console.log(error);
+                $("#pokemonInfoCard").show();
+                $("#pokemonName").html("Error Unclassified Pokemon");
+                $("#pokemonImage").hide();
+
             }
         })
     }
